@@ -1,10 +1,11 @@
 require 'dotenv'
+require 'shellwords'
 
 class Repository
   def initialize(file)
-    Dotenv.load("#{file}")
-    @user = ENV['STORE_USER']
-    @password = ENV['STORE_PASSWORD']
+    Dotenv.load(file)
+    @user = Shellwords.escape ENV['STORE_USER']
+    @password = Shellwords.escape ENV['STORE_PASSWORD']
     @base_url = ENV['BASE_URL']
   end
 
