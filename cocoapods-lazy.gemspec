@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.executables   << 'cocoapods-lazy'
   spec.require_paths = %w{ lib }
   
-  spec.add_dependency "dotenv", ">= 2.7.4"
+  spec.add_dependency "dotenv", ">= 2.6.0"
   spec.add_dependency "cocoapods", ">= 1.6"
 
   spec.add_development_dependency "bundler", "~> 2.0"
