@@ -26,5 +26,6 @@ class Repository
     url = @base_url + zip_name
     puts "Storing to #{url}"
     `curl --fail -v -u #{@user}:#{@password} --upload-file #{zip_name} #{url}`
+    `rm -rf #{zip_name}`
   end
 end
