@@ -19,9 +19,11 @@ class Repository
 
   def upload(name:)
     zip_name = "#{name}.zip"
+    unless File.exist?(zip_name)
+      puts "Make zip: #{zip_name}"
+      `zip -9 -r -y #{zip_name} Pods`
+    end
     url = @base_url + zip_name
-    puts "Make zip: #{zip_name}"
-    `zip -9 -r -y #{zip_name} Pods`
     puts "Storing to #{url}"
     `curl --fail -v -u #{@user}:#{@password} --upload-file #{zip_name} #{url}`
   end
