@@ -31,8 +31,9 @@ module CocoapodsLazy
         puts 'Drop pods'
         `rm -rf Pods`
         @repository.download(name: read_podfile_checksum())
+        is_downloaded = Dir.exist?('Pods')
         pod_install(ARGV)
-        store()
+        store() unless is_downloaded
       else
         puts 'Pods is actual'
         pod_install(ARGV)
