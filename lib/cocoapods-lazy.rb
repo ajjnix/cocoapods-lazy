@@ -31,13 +31,14 @@ module CocoapodsLazy
         puts 'Drop pods'
         `rm -rf Pods`
         @repository.download(name: read_podfile_checksum())
+        pod_install(ARGV)
+        store()
       else
         puts 'Pods is actual'
+        pod_install(ARGV)
       end
-      Pod::Command.run(ARGV)
-      store() if read_podfile_checksum() != read_manifest_checksum()
     end
-    
+
     def update
       Pod::Command.run(ARGV)
       store()
@@ -55,6 +56,11 @@ module CocoapodsLazy
 
     def read_manifest_checksum
       PodfileLock.new("./Pods/Manifest.lock").checksum
+    end
+
+    def pod_install(argv)
+      puts 'run pod install for actualize workspace'
+      Pod::Command.run(argv)
     end
   end
 end
