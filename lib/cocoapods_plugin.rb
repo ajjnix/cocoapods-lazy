@@ -1,0 +1,2 @@
+require 'cocoapods-lazy/main'
+

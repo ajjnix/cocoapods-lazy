@@ -1,4 +1,4 @@
-
+# coding: utf-8
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "cocoapods-lazy/version"
@@ -15,9 +15,8 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
 
   spec.files         = Dir["lib/**/*.rb"]
-  spec.bindir        = "bin"
-  spec.executables   << 'cocoapods-lazy'
-  spec.require_paths = %w{ lib }
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.require_paths = ['lib']
   
   spec.add_dependency "dotenv", ">= 2.6.0"
   spec.add_dependency "cocoapods", ">= 1.6"
