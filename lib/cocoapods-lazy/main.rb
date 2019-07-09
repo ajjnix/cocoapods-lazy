@@ -23,7 +23,7 @@ module Pod
         remote_storage = Pod::Lazy::RemoteStorage.new(credential)
         repository = Pod::Lazy::Repository.new(remote_storage)
         repository.fetch() if @should_fetch
-        puts "Run 'pod #{ARGV.join(" ")}'"
+        puts "Run origin command"
         super
         if repository.should_store && @should_store
           puts "Storing..."
@@ -32,7 +32,7 @@ module Pod
         puts "Flow cocoapods-lazy if finished"
       else
         puts "cocoapods-lazy is not enabled in Podfile"
-        puts "Run cocoapods #{ARGV}"
+        puts "Run origin command"
         super
       end
     end
