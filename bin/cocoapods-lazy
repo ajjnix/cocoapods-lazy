@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-$LOAD_PATH.push File.expand_path("../../lib", __FILE__)
-
-require 'cocoapods-lazy'
-
-CocoapodsLazy::Invoker.invoke(ARGV)
