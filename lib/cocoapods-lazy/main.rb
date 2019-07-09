@@ -7,7 +7,13 @@ require 'cocoapods-lazy/dsl'
 require 'cocoapods-core/podfile'
 
 module Pod
-  module Lazy    
+  module Lazy
+    def initialize(argv)
+      super
+      @should_store = argv.flag?('store', true)
+      @should_fetch = argv.flag?('fetch', true)
+    end
+
     def run
       puts "Redirection to cocoapods-lazy"
       credential = load_credential()
@@ -16,11 +22,11 @@ module Pod
         puts "Credentials:\n#{credential}"
         remote_storage = Pod::Lazy::RemoteStorage.new(credential)
         repository = Pod::Lazy::Repository.new(remote_storage)
-        repository.fetch()
+        repository.fetch() if @should_fetch
         puts "Run 'pod #{ARGV.join(" ")}'"
         super
-        if repository.should_store
-          puts "Should store"
+        if repository.should_store && @should_store
+          puts "Storing..."
           repository.store()
         end
         puts "Flow cocoapods-lazy if finished"
@@ -34,7 +40,14 @@ module Pod
     def puts(value)
       Pod::Lazy::Log.puts(value)
     end
-    
+
+    def options
+      [
+        ['--no-fetch', 'Skip fetch action'], 
+        ['--no-store', 'Skip store action'],
+      ].concat(super)
+    end
+
     private
     
     def load_credential
@@ -52,3 +65,9 @@ end
 class Pod::Command::Update
   prepend Pod::Lazy
 end
+
+Pod::Command::Install.singleton_class.prepend Pod::Lazy
+Pod::Command::Update.singleton_class.prepend Pod::Lazy
+
+# Pod::Command::Install.singleton_class.send :prepend, Pod::Lazy
+# Pod::Command::Update.singleton_class.send :prepend, Pod::Lazy
