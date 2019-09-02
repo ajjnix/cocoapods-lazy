@@ -1,16 +1,42 @@
 require 'cocoapods'
-require 'cocoapods-lazy/credential'
 
 module Pod
   class Podfile
     module DSL
-      class Credential
-        attr_accessor :login
-        attr_accessor :password
+      class Config
         attr_accessor :base_url
         
-        def is_valid?
-          return login != nil && password != nil && base_url != nil
+        def validate
+          raise 'Write base_url for continue' if base_url == nil
+        end
+        
+        def login
+          return @login unless @login.nil?
+          puts "Write login from #{@base_url}"
+          @login = $stdin.gets
+          return @login
+        end
+        
+        def login=(login)
+          @login = Shellwords.escape(login) unless login.blank?
+        end
+        
+        def password
+          return @password unless @password.nil?
+          puts "Write password from #{@base_url}"
+          @password = Shellwords.escape $stdin.gets.chomp
+          return @password
+        end
+        
+        def password=(password)
+          @password = Shellwords.escape(password) unless password.blank?
+        end
+        
+        def to_s
+          descriptor = ""
+          descriptor += "login = #{@login}\n" unless @login.nil?
+          descriptor += "password = *****\n" unless @password.nil?
+          descriptor += "base_url = #{@base_url}"
         end
       end
     end
@@ -20,13 +46,13 @@ end
 module Pod
   class Podfile
     module DSL
-      class_attr_accessor :credential
+      class_attr_accessor :config
 
-      def pods_storage_credential(&block)
-        credential = Credential.new()
-        block.call(credential)
-        raise unless credential.is_valid?
-        DSL.credential = Pod::Lazy::Credential.new(credential.login, credential.password, credential.base_url)
+      def cocoapods_lazy(&block)
+        config = Config.new()
+        block.call(config)
+        config.validate
+        DSL.config = config
       end
     end
   end

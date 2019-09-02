@@ -5,16 +5,14 @@ module Pod
     class RemoteStorage
       include Pod::Lazy::Log
 
-      def initialize(credential)
-        @login = credential.login
-        @password = credential.password
-        @base_url = credential.base_url
+      def initialize(config)
+        @config = config
       end
 
       def fetch(name:)
         zip_name = "#{name}.zip"
-        url = @base_url + zip_name
-        puts `curl --fail -v -u #{@login}:#{@password} #{url} --output #{zip_name}`
+        url = @config.base_url + zip_name
+        puts `curl --fail #{url} --output #{zip_name}`
         `unzip #{zip_name}`
         `rm -rf #{zip_name}`
       end
@@ -25,9 +23,9 @@ module Pod
           puts "Make zip: #{zip_name}"
           `zip -9 -r -y #{zip_name} Pods`
         end
-        url = @base_url + zip_name
+        url = @config.base_url + zip_name
         puts "Storing to #{url}"
-        `curl --fail -v -u #{@login}:#{@password} --upload-file #{zip_name} #{url}`
+        `curl --fail -u #{@config.login}:#{@config.password} --upload-file #{zip_name} #{url}`
         puts "Remove #{zip_name}"
         `rm -rf #{zip_name}`
       end

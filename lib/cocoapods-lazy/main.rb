@@ -16,11 +16,11 @@ module Pod
 
     def run
       puts "Redirection to cocoapods-lazy"
-      credential = load_credential()
-      unless credential.nil?
+      lazy_config = load_credential()
+      unless lazy_config.nil?
         puts "cocoapods-lazy is enabled in Podfile"
-        puts "Credentials:\n#{credential}"
-        remote_storage = Pod::Lazy::RemoteStorage.new(credential)
+        puts "Lazy config:\n#{lazy_config}"
+        remote_storage = Pod::Lazy::RemoteStorage.new(lazy_config)
         repository = Pod::Lazy::Repository.new(remote_storage)
         repository.fetch() if @should_fetch
         puts "Run origin command"
@@ -53,7 +53,7 @@ module Pod
     def load_credential
       path = Pathname.new('Podfile')
       Podfile.from_file(path)
-      Pod::Podfile::DSL.credential
+      Pod::Podfile::DSL.config
     end
   end
 end

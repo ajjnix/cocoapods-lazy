@@ -6,7 +6,7 @@ module Pod
       end
       
       def self.puts(value)
-        UI.puts "#### #{value}"
+        UI.puts "#### #{value}".blue
       end
     end
   end
