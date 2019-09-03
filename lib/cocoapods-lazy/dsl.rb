@@ -1,4 +1,5 @@
 require 'cocoapods'
+require 'cocoapods-lazy/logger'
 
 module Pod
   class Podfile
@@ -12,7 +13,8 @@ module Pod
         
         def login
           return @login unless @login.nil?
-          puts "Write login from #{@base_url}"
+          Logger.important_i "Write login from #{@base_url}"
+          Logger.important "Write login from #{@base_url}"
           @login = $stdin.gets
           return @login
         end
@@ -23,7 +25,8 @@ module Pod
         
         def password
           return @password unless @password.nil?
-          puts "Write password from #{@base_url}"
+          Logger.important_i "Write password from #{@base_url}"
+          Logger.important "Write password from #{@base_url}"
           @password = Shellwords.escape $stdin.gets.chomp
           return @password
         end

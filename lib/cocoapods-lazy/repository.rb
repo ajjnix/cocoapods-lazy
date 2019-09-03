@@ -1,12 +1,10 @@
 require 'cocoapods-core'
 require 'fileutils'
-require 'cocoapods-lazy/log'
+require 'cocoapods-lazy/logger'
 
 module Pod
   module Lazy
     class Repository
-      include Pod::Lazy::Log
-
       def initialize(repository)
         @repository = repository
       end
@@ -14,16 +12,16 @@ module Pod
       def fetch
         @fetched_checksum = read_podfile_checksum()
         if @fetched_checksum.nil?
-          puts "Podfile.lock not found"
+          Logger.info "Podfile.lock not found"
           @is_generated_pods = true
         elsif @fetched_checksum != read_manifest_checksum()
-          puts 'Checksum IS NOT EQUAL'
-          puts 'Drop Pods directory'
+          Logger.info 'Checksum IS NOT EQUAL'
+          Logger.info 'Drop Pods directory'
           `rm -rf Pods`
           @repository.fetch(name: @fetched_checksum)
           @is_generated_pods = !Dir.exist?('Pods')
         else
-          puts 'Checksum IS EQUAL'
+          Logger.info 'Checksum IS EQUAL'
           @is_generated_pods = false
         end
       end
@@ -33,7 +31,7 @@ module Pod
       end
 
       def store
-        puts "Reason for store: #{store_reason || 'Not reason for store'}"
+        Logger.info "Reason for store: #{store_reason || 'Not reason for store'}"
         @repository.store(name: read_podfile_checksum())
       end
 

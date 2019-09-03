@@ -1,10 +1,10 @@
 require 'cocoapods'
+require 'cocoapods-core/podfile'
 require 'cocoapods-lazy/version'
-require 'cocoapods-lazy/log'
+require 'cocoapods-lazy/logger'
 require 'cocoapods-lazy/repository'
 require 'cocoapods-lazy/remote_storage'
 require 'cocoapods-lazy/dsl'
-require 'cocoapods-core/podfile'
 
 module Pod
   module Lazy
@@ -15,30 +15,26 @@ module Pod
     end
 
     def run
-      puts "Redirection to cocoapods-lazy"
+      Logger.info "Redirection to cocoapods-lazy"
       lazy_config = load_credential()
       unless lazy_config.nil?
-        puts "cocoapods-lazy is enabled in Podfile"
-        puts "Lazy config:\n#{lazy_config}"
+        Logger.info "cocoapods-lazy is enabled in Podfile"
+        Logger.info "Lazy config:\n#{lazy_config}"
         remote_storage = Pod::Lazy::RemoteStorage.new(lazy_config)
         repository = Pod::Lazy::Repository.new(remote_storage)
         repository.fetch() if @should_fetch
-        puts "Run origin command"
+        Logger.info "Run origin command"
         super
         if repository.should_store && @should_store
-          puts "Storing..."
+          Logger.info "Storing..."
           repository.store()
         end
-        puts "Flow cocoapods-lazy if finished"
+        Logger.info "Flow cocoapods-lazy if finished"
       else
-        puts "cocoapods-lazy is not enabled in Podfile"
-        puts "Run origin command"
+        Logger.info "cocoapods-lazy is not enabled in Podfile"
+        Logger.info "Run origin command"
         super
       end
-    end
-
-    def puts(value)
-      Pod::Lazy::Log.puts(value)
     end
 
     def options
