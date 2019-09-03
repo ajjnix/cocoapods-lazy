@@ -13,7 +13,6 @@ module Pod
         
         def login
           return @login unless @login.nil?
-          Logger.important_i "Write login from #{@base_url}"
           Logger.important "Write login from #{@base_url}"
           @login = $stdin.gets
           return @login
@@ -25,7 +24,6 @@ module Pod
         
         def password
           return @password unless @password.nil?
-          Logger.important_i "Write password from #{@base_url}"
           Logger.important "Write password from #{@base_url}"
           @password = Shellwords.escape $stdin.gets.chomp
           return @password
