@@ -18,7 +18,8 @@ module Pod
           Logger.info 'Checksum IS NOT EQUAL'
           Logger.info 'Drop Pods directory'
           `rm -rf Pods`
-          @repository.fetch(name: @fetched_checksum)
+          file_name = add_xcode_version @fetched_checksum
+          @repository.fetch(name: file_name)
           @is_generated_pods = !Dir.exist?('Pods')
         else
           Logger.info 'Checksum IS EQUAL'
@@ -32,7 +33,8 @@ module Pod
 
       def store
         Logger.info "Reason for store: #{store_reason || 'Not reason for store'}"
-        @repository.store(name: read_podfile_checksum())
+        file_name = add_xcode_version @fetched_checksum
+        @repository.store(name: file_name)
       end
 
       private
@@ -64,6 +66,15 @@ module Pod
         return nil unless path.exist?
         lockfile = Lockfile.from_file(path.realpath)
         lockfile.internal_data['PODFILE CHECKSUM']
+      end
+
+      def add_xcode_version(name)
+          name + "_" + xcode_version
+      end
+
+      def xcode_version
+          info = `xcodebuild -version`
+          info.lines.first.sub!(" ", "_").chomp
       end
     end
   end
