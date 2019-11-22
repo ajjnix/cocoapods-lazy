@@ -33,6 +33,7 @@ module Pod
 
       def store
         Logger.info "Reason for store: #{store_reason || 'Not reason for store'}"
+        @fetched_checksum = @fetched_checksum || read_podfile_checksum()
         file_name = add_xcode_version @fetched_checksum
         @repository.store(name: file_name)
       end
