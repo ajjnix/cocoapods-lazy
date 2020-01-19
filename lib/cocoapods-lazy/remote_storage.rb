@@ -18,13 +18,13 @@ module Pod
       def store(name:)
         zip_name = "#{name}.zip"
         unless File.exist?(zip_name)
-          Logger.info "Make zip: #{zip_name}"
+          Pod::Lazy::Logger.info "Make zip: #{zip_name}"
           `zip -9 -r -y #{zip_name} Pods`
         end
         url = @config.base_url + zip_name
-        Logger.info "Storing to #{url}"
+        Pod::Lazy::Logger.info "Storing to #{url}"
         `curl --fail -u #{@config.login}:#{@config.password} --upload-file #{zip_name} #{url}`
-        Logger.info "Remove #{zip_name}"
+        Pod::Lazy::Logger.info "Remove #{zip_name}"
         `rm -rf #{zip_name}`
       end
     end

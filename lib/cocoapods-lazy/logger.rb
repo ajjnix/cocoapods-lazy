@@ -11,5 +11,3 @@ module Pod
     end
   end
 end
-
-Logger = Pod::Lazy::Logger

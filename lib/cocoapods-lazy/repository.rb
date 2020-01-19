@@ -12,17 +12,17 @@ module Pod
       def fetch
         @fetched_checksum = read_podfile_checksum()
         if @fetched_checksum.nil?
-          Logger.info "Podfile.lock not found"
+          Pod::Lazy::Logger.info "Podfile.lock not found"
           @is_generated_pods = true
         elsif @fetched_checksum != read_manifest_checksum()
-          Logger.info 'Checksum IS NOT EQUAL'
-          Logger.info 'Drop Pods directory'
+          Pod::Lazy::Logger.info 'Checksum IS NOT EQUAL'
+          Pod::Lazy::Logger.info 'Drop Pods directory'
           `rm -rf Pods`
           file_name = add_xcode_version @fetched_checksum
           @repository.fetch(name: file_name)
           @is_generated_pods = !Dir.exist?('Pods')
         else
-          Logger.info 'Checksum IS EQUAL'
+          Pod::Lazy::Logger.info 'Checksum IS EQUAL'
           @is_generated_pods = false
         end
       end
@@ -32,7 +32,7 @@ module Pod
       end
 
       def store
-        Logger.info "Reason for store: #{store_reason || 'Not reason for store'}"
+        Pod::Lazy::Logger.info "Reason for store: #{store_reason || 'Not reason for store'}"
         @fetched_checksum = @fetched_checksum || read_podfile_checksum()
         file_name = add_xcode_version @fetched_checksum
         @repository.store(name: file_name)

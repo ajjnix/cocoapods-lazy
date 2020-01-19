@@ -15,24 +15,24 @@ module Pod
     end
 
     def run
-      Logger.info "Redirection to cocoapods-lazy"
+      Pod::Lazy::Logger.info "Redirection to cocoapods-lazy"
       lazy_config = load_credential()
       unless lazy_config.nil?
-        Logger.info "cocoapods-lazy is enabled in Podfile"
-        Logger.info "Lazy config:\n#{lazy_config}"
+        Pod::Lazy::Logger.info "cocoapods-lazy is enabled in Podfile"
+        Pod::Lazy::Logger.info "Lazy config:\n#{lazy_config}"
         remote_storage = Pod::Lazy::RemoteStorage.new(lazy_config)
         repository = Pod::Lazy::Repository.new(remote_storage)
         repository.fetch() if @should_fetch
-        Logger.info "Run origin command"
+        Pod::Lazy::Logger.info "Run origin command"
         super
         if repository.should_store && @should_store
-          Logger.info "Storing..."
+          Pod::Lazy::Logger.info "Storing..."
           repository.store()
         end
-        Logger.info "Flow cocoapods-lazy if finished"
+        Pod::Lazy::Logger.info "Flow cocoapods-lazy if finished"
       else
-        Logger.info "cocoapods-lazy is not enabled in Podfile"
-        Logger.info "Run origin command"
+        Pod::Lazy::Logger.info "cocoapods-lazy is not enabled in Podfile"
+        Pod::Lazy::Logger.info "Run origin command"
         super
       end
     end
